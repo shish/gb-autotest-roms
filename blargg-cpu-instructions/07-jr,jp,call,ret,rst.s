@@ -105,7 +105,11 @@ taken:
      ld   a,($DF80-5)
      call update_crc_fast
      
-     ldsp temp
+     ld a,(temp)
+     ld l,a
+     ld a,(temp+1)
+     ld h,a
+     ld sp,hl
      
      ld   a,c
      add  $10

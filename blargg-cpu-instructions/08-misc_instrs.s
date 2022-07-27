@@ -102,7 +102,11 @@ instr_done:
      call update_crc_fast
      
      ; Restore SP
-     ldsp temp
+     ld a,(temp)
+     ld l,a
+     ld a,(temp+1)
+     ld h,a
+     ld sp,hl
      
      ret
 

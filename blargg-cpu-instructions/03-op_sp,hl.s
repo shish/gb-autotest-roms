@@ -72,7 +72,11 @@ instr_done:
      ld   a,(temp+3)
      call update_crc_fast
      
-     ldsp temp
+     ld a,(temp)
+     ld l,a
+     ld a,(temp+1)
+     ld h,a
+     ld sp,hl
      
      pop  hl
      pop  de
