@@ -120,23 +120,45 @@ exit:
      call print_newline
      call show_printing
      pop  af
-     
-     ; Report exit status
-     cp   1
-     
-     ; 0: ""
-     ret  c
-     
-     ; 1: "Failed"
-     jr   nz,+
-     print_str "Failed",newline
-     ret
-     
-     ; n: "Failed #n"
-+    print_str "Failed #"
-     call print_dec
-     call print_newline
-     ret
+
+.ifdef EXIT_SHISH
+     cp 0
+     jr z,pass
+     jr nz,fail
+pass:
+     .byte $FC
+fail:
+     .byte $FD
+.else
+     .ifdef EXIT_MOONEYE
+          cp 0
+          jr nz,+
+          ld b,3
+          ld c,5
+          ld d,8
+          ld e,13
+          ld h,21
+          ld l,34
+     +    ld b,b
+     .else
+          ; Report exit status
+          cp   1
+
+          ; 0: ""
+          ret  c
+
+          ; 1: "Failed"
+          jr   nz,+
+          print_str "Failed",newline
+          ret
+
+          ; n: "Failed #n"
+     +    print_str "Failed #"
+          call print_dec
+          call print_newline
+          ret
+     .endif
+.endif
 
 ; returnOrg puts this code AFTER user code.
 .section "runtime" returnOrg
